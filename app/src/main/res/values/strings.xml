@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">VisitorApp100</string>
+
+    <string-array name="StationList">
+        <item>--Default--</item>
+        <item>Ube</item>
+        <item>Iwahana</item>
+        <item>Ino</item>
+        <item>Ube-Shinkawa</item>
+        <item>Kotoshiba</item>
+        <item>Higashi-Shinkawa</item>
+    </string-array>
+
+    <string-array name="settingList">
+        <item>How to use</item>
+        <item>Change Notification Level</item>
+        <item> </item>
+        <item> </item>
+        <item> </item>
+        <item> </item>
+        <item> </item>
+    </string-array>
+
+</resources>
