@@ -20,7 +20,7 @@
         <item> </item>
         <item> </item>
     </string-array>
-    <string name="title_activity_notification">NotificationActivity</string>
+    <string name="title_activity_notification">Settings</string>
     <!--
     This string is used for square devices and overridden by hello_world in
     values-round/strings.xml for round devices.

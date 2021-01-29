@@ -104,6 +104,8 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
   // database.
   private final Map<Integer, Pair<AugmentedImage, Anchor>> augmentedImageMap = new HashMap<>();
 
+  String stationName = "Kotoshiba";
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -132,7 +134,10 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
       public void onClick(View v) {
         //元のアクティビティへ遷移
         Intent intent2 = new Intent(AugmentedImageActivity.this, MainActivity.class);
-        startActivity(intent2);
+        intent2.putExtra(MainActivity.STATION_NAME,stationName);
+        //startActivity(intent2);
+        setResult(RESULT_OK,intent2);
+        finish();
       }
     });
 

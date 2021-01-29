@@ -1,10 +1,19 @@
 package com.example.visitorapp100;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,7 +26,9 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.visitorapp100.augmentedimage.AugmentedImageActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.BufferedReader;
@@ -30,7 +41,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LocationListener{
 
     String htmlData = "default";
     String debugTxt = "debug";
@@ -38,10 +49,16 @@ public class MainActivity extends AppCompatActivity {
     int cautionCount = -1;
     Boolean infoWarning = true;
     // true = warning, false = caution
+    static final int RESULT_SUBACTIVITY = 1000;
 
     ListView listView;
     List<TrafficInfo> trafficList = new ArrayList<TrafficInfo>();
     static InfoAdapter adapter;
+    private TextView txt1;
+    public static final String STATION_NAME = "Kotoshiba";
+    String useStation = "START";
+
+    LocationManager locationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-        TextView txt1 = findViewById(R.id.text01);
+        txt1 = findViewById(R.id.text01);
         txt1.setMovementMethod(new ScrollingMovementMethod());
         httpGet(txt1);
         txt1.setVisibility(View.INVISIBLE);
@@ -59,14 +76,16 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        //検索ボタンの処理
+        //ボタンの処理
         FloatingActionButton fab = findViewById(R.id.floatingActionButton);
+        FloatingActionButton fab2 = findViewById(R.id.floatingCameraButton);
+        FloatingActionButton fab3 = findViewById(R.id.floatingGPSButton);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //txt1.setText(htmlData);
-               checkWarningCount();
-               checkCautionCount();
+                checkWarningCount();
+                checkCautionCount();
                 txt2.setText("  Caution:  "+String.valueOf(cautionCount));
                 txt3.setText("  Warning:  "+String.valueOf(warningCount));
                 if(infoWarning){
@@ -77,27 +96,42 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        fab2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, AugmentedImageActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        fab3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addItem();
+            }
+        });
+
+        //GPS位置情報取得
+
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) !=
+                PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION,},
+                    1000);
+        }
+        else{
+            locationStart();
+
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                    1000, 50, (LocationListener) this);
+
+        }
+
         //spinner
 
         Spinner spinner1 = findViewById(R.id.spinnerFrom);
         Spinner spinner2 = findViewById(R.id.spinnerTo);
-
-        // ARCore button
-        Button arButton = findViewById(R.id.cameraButton);
-        arButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //別アクティビティの起動
-                //Intent intent = new Intent(MainActivity.this, AugmentedImageActivity.class);
-                //startActivity(intent);
-
-                switch(v.getId()){
-                    case R.id.cameraButton:
-                        addItem();
-                        break;
-                }
-            }
-        });
 
         //情報表示リスト
 
@@ -124,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.NotificationButton:
                 // ボタンをタップした際の処理を記述
                 Intent intent3 = new Intent(MainActivity.this,NotificationActivity.class);
-                startActivity(intent3);
+                startActivityForResult(intent3,RESULT_SUBACTIVITY);
                 break;
 
 
@@ -289,6 +323,102 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+    //ARActivity からのデータ受け取り
+    protected void onActivityResult(int requestCode,int resultCode,Intent intent){
+        super.onActivityResult(requestCode,resultCode,intent);
+
+        if(resultCode == RESULT_OK && requestCode == RESULT_SUBACTIVITY &&
+                null != intent) {
+            String res = intent.getStringExtra(MainActivity.STATION_NAME);
+            txt1.setText(res);
+
+        }
+
+    }
+
+    //位置情報取得
+    private void locationStart(){
+        Log.d("debug","locationStart()");
+
+        // LocationManager インスタンス生成
+        locationManager =
+                (LocationManager) getSystemService(LOCATION_SERVICE);
+
+        if (locationManager != null && locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            Log.d("debug", "location manager Enabled");
+        } else {
+            // GPSを設定するように促す
+            Intent settingsIntent =
+                    new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            startActivity(settingsIntent);
+            Log.d("debug", "not gpsEnable, startActivity");
+        }
+
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) !=
+                PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION,}, 1000);
+
+            Log.d("debug", "checkSelfPermission false");
+            return;
+        }
+
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                1000, 50, (LocationListener) this);
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(
+            int requestCode, @NonNull String[]permissions, @NonNull int[] grantResults) {
+        if (requestCode == 1000) {
+            // 使用が許可された
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.d("debug","checkSelfPermission true");
+
+                locationStart();
+
+            } else {
+                // それでも拒否された時の対応
+                Toast toast = Toast.makeText(this,
+                        "これ以上なにもできません", Toast.LENGTH_SHORT);
+                toast.show();
+            }
+        }
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        // 緯度の表示
+        //TextView textView1 = (TextView) findViewById(R.id.text_view1);
+        String str1 = "Latitude:"+location.getLatitude();
+        //textView1.setText(str1);
+
+        // 経度の表示
+        //TextView textView2 = (TextView) findViewById(R.id.text_view2);
+        String str2 = "Longtude:"+location.getLongitude();
+        //textView2.setText(str2);
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+    }
+
+
+
 
 }
 
