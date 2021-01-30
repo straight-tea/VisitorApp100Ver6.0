@@ -61,6 +61,11 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
 
     TextView txtDate;
 
+    //list格納用変数
+    String listLineName;
+    String listSection;
+    String listCause;
+
     LocationManager locationManager;
 
     @Override
@@ -72,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
         txt1 = findViewById(R.id.text01);
         txt1.setMovementMethod(new ScrollingMovementMethod());
         httpGet(txt1);
+        //デバッグ用テキスト　画面中央
         txt1.setVisibility(View.INVISIBLE);
 
         TextView txt2 = findViewById(R.id.textCaution);
@@ -92,13 +98,25 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
                 checkWarningCount();
                 checkCautionCount();
                 checkDate();
+
+                //論文用　4項目
+                addItemDev1();
+                addItemDev2();
+                cautionCount = 2;
+                warningCount = 0;
+
                 txt2.setText("  Caution:  "+String.valueOf(cautionCount));
                 txt3.setText("  Warning:  "+String.valueOf(warningCount));
+
+                /*
+
                 if(infoWarning){
                     infoWarning = false;
                 }else{
                     infoWarning = true;
                 }
+
+                 */
             }
         });
 
@@ -113,7 +131,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
         fab3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addItem();
+                getWarningInfo(warningCount);
+                //addItem();
             }
         });
 
@@ -219,7 +238,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
         String temp3 = htmlData;
         String[] getWarning = temp3.split("row mt-4 state-3",0);
 
-        String[] divideInfo1 = temp3.split("<div class=\"line-state-container\">",2);
+        //運休情報抽出
+        String[] divideInfo1 = temp3.split("class=\"line-state state-3\">",2);
         String[] divideInfo2 = divideInfo1[1].split("class=\"line-state state-2\">",2);
 
         String[] divideInfo3 = divideInfo2[1].split("<div class=\"row mt-4 state-2\">",2);
@@ -236,6 +256,12 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
 
         String[] divideInfo6 = divideInfo5[1].split("</dd>",2);
         String[] divideInfoCause = divideInfo6[0].split("<dd>",2);
+
+        listLineName = divideInfoLine2[0];
+        listSection = divideInfoSection2[0];
+        listCause = divideInfoCause[1];
+
+        txt1.setText(getWarning[0]);
 
         addItem();
 
@@ -295,8 +321,26 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
     protected void addItem(){
         trafficList.add(
                 new TrafficInfo(
-                        "LineName",
-                        "Section", "status","cause"));
+                        listLineName,
+                        listSection, "status",listCause));
+        adapter.notifyDataSetChanged();
+
+    }
+
+    protected void addItemDev1(){
+        infoWarning =false;
+        trafficList.add(
+                new TrafficInfo(
+                        "Ube Line","Between Ube and Shin-Yamaguchi","Operation Stopped Partially","Heavy Rain"));
+        adapter.notifyDataSetChanged();
+
+    }
+
+    protected void addItemDev2(){
+        infoWarning =false;
+        trafficList.add(
+                new TrafficInfo(
+                        "San-yō Line","Between Shimonoseki and Shin-Yamaguchi","Operation Stopped Partially","Heavy Rain"));
         adapter.notifyDataSetChanged();
 
     }
