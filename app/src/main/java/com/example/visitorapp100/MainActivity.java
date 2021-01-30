@@ -25,6 +25,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,6 +59,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
     public static final String STATION_NAME = "Kotoshiba";
     String useStation = "START";
 
+    TextView txtDate;
+
     LocationManager locationManager;
 
     @Override
@@ -74,6 +77,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
         TextView txt2 = findViewById(R.id.textCaution);
         TextView txt3 = findViewById(R.id.textWarning);
 
+        txtDate = findViewById(R.id.textDate);
+
 
 
         //ボタンの処理
@@ -86,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
                 //txt1.setText(htmlData);
                 checkWarningCount();
                 checkCautionCount();
+                checkDate();
                 txt2.setText("  Caution:  "+String.valueOf(cautionCount));
                 txt3.setText("  Warning:  "+String.valueOf(warningCount));
                 if(infoWarning){
@@ -183,6 +189,32 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
         cautionCount = cautionCount-1;
     }
 
+    //情報取得日時表示
+    public void checkDate(){
+        String temp4 = htmlData;
+        String[] tempDate = temp4.split("<p class=\"time\">Current as of:",0);
+         String[] infoDate = tempDate[1].split("<br/>",0);
+        // infoDate[0] に　日付/月/年 at 時刻 が格納
+        String[] separateDate = infoDate[0].split("/",0);
+        Log.d("DATE", separateDate[1]);
+        if("01".equals(separateDate[1]))separateDate[1]="Jan";
+        if("02".equals(separateDate[1]))separateDate[1]="Feb";
+        if("03".equals(separateDate[1]))separateDate[1]="Mar";
+        if("04".equals(separateDate[1]))separateDate[1]="Apr";
+        if("05".equals(separateDate[1]))separateDate[1]="May";
+        if("06".equals(separateDate[1]))separateDate[1]="Jun";
+        if("07".equals(separateDate[1]))separateDate[1]="Jul";
+        if("08".equals(separateDate[1]))separateDate[1]="Aug";
+        if("09".equals(separateDate[1]))separateDate[1]="Sep";
+        if("10".equals(separateDate[1]))separateDate[1]="Oct";
+        if("11".equals(separateDate[1]))separateDate[1]="Nov";
+        if("12".equals(separateDate[1]))separateDate[1]="Dec";
+
+
+        txtDate.setText(separateDate[0]+"/"+separateDate[1]+"/"+separateDate[2]);
+
+    }
+
     public void getWarningInfo(int count){
         String temp3 = htmlData;
         String[] getWarning = temp3.split("row mt-4 state-3",0);
@@ -204,6 +236,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
 
         String[] divideInfo6 = divideInfo5[1].split("</dd>",2);
         String[] divideInfoCause = divideInfo6[0].split("<dd>",2);
+
+        addItem();
 
     }
 
