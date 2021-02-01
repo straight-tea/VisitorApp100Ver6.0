@@ -1,0 +1,6 @@
+default.jpg|image/default.jpg
+kotoshiba01.jpg|image/kotoshiba01.jpg
+kotoshiba02.jpg|image/kotoshiba02.jpg
+kotoshiba03.jpg|image/kotoshiba03.jpg
+kotoshiba04.jpg|image/kotoshiba04.jpg
+kotoshiba05.jpg|image/kotoshiba05.jpg

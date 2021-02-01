@@ -15,9 +15,10 @@
     <uses-feature
         android:name="android.hardware.camera.ar"
         android:required="true" /> <!-- Indicates whether "Google Play Services for AR" (ARCore) is "required" or "optional". -->
-    <meta-data
-        android:name="com.google.ar.core"
-        android:value="required" />
+
+
+    <meta-data android:name="com.google.ar.core.min_apk_version" android:value="24" />
+
 
     <application
         android:allowBackup="true"
@@ -45,6 +46,15 @@
             </intent-filter>
         </activity>
         <activity android:name=".augmentedimage.AugmentedImageActivity" />
+
+        <receiver
+            android:name=".AlarmNotification"
+            android:process=":remote" >
+        </receiver>
+
+        <meta-data
+            android:name="com.google.ar.core"
+            android:value="required" />
     </application>
 
 </manifest>

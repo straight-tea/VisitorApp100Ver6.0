@@ -28,6 +28,7 @@ import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -346,6 +347,33 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
           // When an image is in PAUSED state, but the camera is not PAUSED, it has been detected,
           // but not yet tracked.
           String text = String.format("Detected Image %d", augmentedImage.getIndex());
+          //一致画像からどの駅か割り出す
+          Log.d("ARCore", text);
+
+          switch(augmentedImage.getIndex()){
+            case 0:
+              text = "earth station";
+              break;
+            case 1:
+              text = "Kotoshiba station";
+              break;
+            case 2:
+              text = "Kotoshiba station";
+              break;
+            case 3:
+              text = "Kotoshiba station";
+              break;
+            case 4:
+              text = "Kotoshiba station";
+              break;
+            case 5:
+              text = "Kotoshiba station";
+              break;
+            default:
+              text = "Not found";
+            break;
+        }
+
           messageSnackbarHelper.showMessage(this, text);
           break;
 
@@ -382,8 +410,11 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
       Anchor centerAnchor = augmentedImageMap.get(augmentedImage.getIndex()).second;
       switch (augmentedImage.getTrackingState()) {
         case TRACKING:
+          /*
           augmentedImageRenderer.draw(
               viewmtx, projmtx, augmentedImage, centerAnchor, colorCorrectionRgba);
+
+           */
           break;
         default:
           break;

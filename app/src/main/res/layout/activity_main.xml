@@ -11,14 +11,12 @@
         android:id="@+id/text01"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
         android:scrollbars="vertical"
+        android:text="Hello World!"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-
+        app:layout_constraintTop_toTopOf="@+id/infoList" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingActionButton"
@@ -62,6 +60,7 @@
         app:layout_constraintStart_toEndOf="@+id/textTo"
         app:layout_constraintTop_toBottomOf="@+id/spinnerFrom" />
 
+
     <Spinner
         android:id="@+id/spinnerFrom"
         android:layout_width="150dp"
@@ -72,7 +71,6 @@
         android:entries="@array/StationList"
         app:layout_constraintStart_toEndOf="@+id/textFrom"
         app:layout_constraintTop_toTopOf="parent" />
-
 
     <ListView
         android:id="@+id/infoList"
@@ -86,7 +84,7 @@
 
     <TextView
         android:id="@+id/textWarning"
-        android:layout_width="175dp"
+        android:layout_width="150dp"
         android:layout_height="45dp"
         android:layout_marginStart="8dp"
         android:layout_marginBottom="8dp"
@@ -98,7 +96,7 @@
 
     <TextView
         android:id="@+id/textCaution"
-        android:layout_width="175dp"
+        android:layout_width="150dp"
         android:layout_height="45dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
@@ -112,7 +110,7 @@
         android:id="@+id/floatingCameraButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:clickable="true"
         app:layout_constraintStart_toEndOf="@+id/spinnerFrom"
@@ -123,9 +121,11 @@
         android:id="@+id/floatingGPSButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
         android:clickable="true"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/floatingCameraButton"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/gps_icon" />
