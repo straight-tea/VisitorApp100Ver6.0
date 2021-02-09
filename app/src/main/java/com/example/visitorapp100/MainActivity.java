@@ -136,6 +136,11 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
             "Maruo","Kiwa","Ajisu","Iwakura","Suō-Sayama","Fukamizo","Kami-Kagawa","Mede","Minami-Nakagawa","Minami-Onoda","Onoda Port","Suzumeda","Nagato-Nagasawa","Tsumazaki",
             "Hamagōchi","Nagato-Motoyama","Suō-Shimogō","Kamigō","Nihozu","ōtoshi","Yabara","Yuda-Onsen","Yamaguchi"};
 
+    String[][] stationLatLngList ={{"Kotoshiba"},
+                                    {"38.0"},
+                                    {"135.0"}
+                                    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -225,59 +230,61 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
             }
         });
 
-        fab3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //GPS位置情報取得
-                locationStart();
-                spinner1.setSelection(41);
+        fab3.setOnClickListener(v -> {
+            //GPS位置情報取得
+            locationStart();
+            spinner1.setSelection(41);
+            Toast toast2 = Toast.makeText(this,"Location Detected",Toast.LENGTH_SHORT);
+            toast2.show();
 
 
 
-                /*
-                NotificationCompat.Builder builder = new NotificationCompat.Builder(
-                        MainActivity.this,
-                        "MyChannel_Id");
-
-                // 通知のアイコン
-                builder.setSmallIcon(android.R.drawable.ic_dialog_info);
 
 
-                // 通知のタイトル
-                builder.setContentTitle("通知タイトル");
 
-                // 通知の内容
-                builder.setContentText("通知の内容");
+            /*
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(
+                    MainActivity.this,
+                    "MyChannel_Id");
 
-
-                // 通知をタップした際にアクティビティを起動する
-                /*
-                // --- ここを削除すると通知の表示のみとなる
-                Intent intent = new Intent(MainActivity.this,NotificationActivity.class);
-                intent.putExtra("DATA","通知から起動されました。");
-
-                PendingIntent pen = PendingIntent.getActivity(MainActivity.this,
-                        0, // 0は識別子。何でも良い
-                        intent,
-                        PendingIntent.FLAG_CANCEL_CURRENT);  // オブジェクトを再生成
-                builder.setContentIntent(pen);
-                builder.setAutoCancel(true);
-                // --- ここを削除すると通知の表示のみとなる
-
-                 */
-                /*
-                // 通知の作成
-                Notification notification = builder.build();
-
-                // 通知サービスで通知を実行する
-                NotificationManager manager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-                manager.notify(0, notification); // 0は識別子。何でも良い
-                Log.d("Notify", "処理してる");
-
-                */
+            // 通知のアイコン
+            builder.setSmallIcon(android.R.drawable.ic_dialog_info);
 
 
-            }
+            // 通知のタイトル
+            builder.setContentTitle("通知タイトル");
+
+            // 通知の内容
+            builder.setContentText("通知の内容");
+
+
+            // 通知をタップした際にアクティビティを起動する
+            /*
+            // --- ここを削除すると通知の表示のみとなる
+            Intent intent = new Intent(MainActivity.this,NotificationActivity.class);
+            intent.putExtra("DATA","通知から起動されました。");
+
+            PendingIntent pen = PendingIntent.getActivity(MainActivity.this,
+                    0, // 0は識別子。何でも良い
+                    intent,
+                    PendingIntent.FLAG_CANCEL_CURRENT);  // オブジェクトを再生成
+            builder.setContentIntent(pen);
+            builder.setAutoCancel(true);
+            // --- ここを削除すると通知の表示のみとなる
+
+             */
+            /*
+            // 通知の作成
+            Notification notification = builder.build();
+
+            // 通知サービスで通知を実行する
+            NotificationManager manager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+            manager.notify(0, notification); // 0は識別子。何でも良い
+            Log.d("Notify", "処理してる");
+
+            */
+
+
         });
 
         //GPS位置情報取得
